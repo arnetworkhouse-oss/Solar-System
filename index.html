@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Solar System - High Brightness Edition</title>
+    <title>Solar System </title>
      <link rel="icon" href="https://raw.githubusercontent.com/arnetworkhouse-oss/Solar-System/main/solar%20system.jpeg" type="image/png">
     <style>
         body { margin: 0; background-color: #000; overflow: hidden; font-family: 'Segoe UI', sans-serif; color: white; touch-action: none; }
@@ -95,7 +95,6 @@
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100000);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     
-    // BRIGHTNESS BOOST: Tone mapping makes colors more vibrant
     renderer.toneMapping = THREE.ReinhardToneMapping;
     renderer.toneMappingExposure = 2.5; 
     
@@ -105,18 +104,16 @@
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
+    controls.minDistance = 200;   // Finite zoom in
+    controls.maxDistance = 8000;  // Finite zoom out
     camera.position.set(0, 1500, 3500);
 
-    // --- ENHANCED LIGHTING ---
-    // High intensity point light from the Sun
     const sunLight = new THREE.PointLight(0xffffff, 8, 15000, 0.5);
     scene.add(sunLight);
 
-    // Stronger ambient light to brighten the "dark side" of planets
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
     scene.add(ambientLight);
 
-    // --- BACKGROUND ---
     const cloudTex = textureLoader.load('https://threejs.org/examples/textures/planets/starmap_4k.jpg');
     const backgroundClouds = new THREE.Mesh(
         new THREE.SphereGeometry(45000, 32, 32),
@@ -129,7 +126,6 @@
     const starGeo = new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(starCoords, 3));
     scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 1.5 })));
 
-    // --- THE SUN ---
     const sunTex = textureLoader.load('https://threejs.org/examples/textures/planets/sun.jpg');
     const sun = new THREE.Mesh(
         new THREE.SphereGeometry(110, 64, 64), 
@@ -166,14 +162,45 @@
     );
     scene.add(sunGlow);
 
-    // --- PLANET GENERATOR ---
+    const sunAura = new THREE.Mesh(
+        new THREE.SphereGeometry(150, 64, 64),
+        new THREE.ShaderMaterial({
+            uniforms: {
+                time: { value: 0 },
+                glowColor: { value: new THREE.Color(0xffaa33) }
+            },
+            vertexShader: `
+                varying vec3 vNormal;
+                void main() {
+                    vNormal = normal;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform float time;
+                uniform vec3 glowColor;
+                varying vec3 vNormal;
+
+                void main() {
+                    float intensity = pow(0.6 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
+                    float flicker = sin(time * 4.0 + vNormal.y * 10.0) * 0.15;
+                    gl_FragColor = vec4(glowColor * (intensity + flicker), 0.9);
+                }
+            `,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            side: THREE.BackSide
+        })
+    );
+    scene.add(sunAura);
+
     function createTopoTexture(colors) {
         const canvas = document.createElement('canvas'); canvas.width = 1024; canvas.height = 512;
         const ctx = canvas.getContext('2d');
         ctx.fillStyle = colors[0]; ctx.fillRect(0, 0, 1024, 512);
         for (let i = 0; i < 1500; i++) {
             ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
-            ctx.globalAlpha = 0.4; // Brighter texture spots
+            ctx.globalAlpha = 0.4;
             ctx.beginPath();
             ctx.arc(Math.random()*1024, Math.random()*512, Math.random()*30, 0, Math.PI*2); ctx.fill();
         }
@@ -181,15 +208,15 @@
     }
 
     const planetData = [
-        { name: "Mercury", dist: 350, size: 7, colors: ["#999", "#666", "#bbb"], speed: 0.035, note: "Smallest planet, closest to the Sun." },
-        { name: "Venus", dist: 500, size: 13, colors: ["#ffd27d", "#ffaa00", "#96723e"], speed: 0.015, note: "Hottest planet in our solar system." },
-        { name: "Earth", dist: 700, size: 14, isEarth: true, speed: 0.01, note: "Our vibrant home planet." },
-        { name: "Mars", dist: 900, size: 10, colors: ["#ff4400", "#cc3300", "#ff6644"], speed: 0.008, note: "The Red Planet." },
-        { name: "Jupiter", dist: 1300, size: 42, colors: ["#ffccaa", "#b5846a", "#f3d1b5"], speed: 0.0045, note: "The massive gas giant." },
-        { name: "Saturn", dist: 1850, size: 35, colors: ["#ffe0b3", "#a38b54", "#ebd197"], speed: 0.003, hasRing: true, note: "Famous for its stunning rings." },
-        { name: "Uranus", dist: 2400, size: 22, colors: ["#b3ffff", "#8dafb1", "#d9f5f7"], speed: 0.0018, note: "The sideways-spinning ice giant." },
-        { name: "Neptune", dist: 2900, size: 22, colors: ["#3366ff", "#3a4da3", "#82aaff"], speed: 0.0014, note: "The windiest world." },
-        { name: "Pluto", dist: 3300, size: 6, colors: ["#ffffff", "#aaaaaa", "#c4b4a9"], speed: 0.001, note: "A cold, distant dwarf planet." }
+        { name: "Mercury", dist: 350, size: 7, colors: ["#777", "#444", "#999"], speed: 0.035, note: "Mercury is the closest planet to the Sun..." },
+        { name: "Venus", dist: 500, size: 13, colors: ["#e3bb76", "#c29a5b", "#96723e"], speed: 0.015, note: "Venus is the second planet from the Sun..." },
+        { name: "Earth", dist: 700, size: 14, isEarth: true, speed: 0.01, note: "Earth is the third planet from the Sun..." },
+        { name: "Mars", dist: 900, size: 10, colors: ["#cc4422", "#993311", "#ff6644"], speed: 0.008, note: "Mars is known as the “Red Planet”..." },
+        { name: "Jupiter", dist: 1300, size: 42, colors: ["#d39c7e", "#b5846a", "#f3d1b5"], speed: 0.0045, note: "Jupiter is the largest planet..." },
+        { name: "Saturn", dist: 1850, size: 35, colors: ["#c5ab6e", "#a38b54", "#ebd197"], speed: 0.003, hasRing: true, note: "Saturn is the second-largest planet..." },
+        { name: "Uranus", dist: 2400, size: 22, colors: ["#bbe1e4", "#8dafb1", "#d9f5f7"], speed: 0.0018, note: "Uranus is an ice giant..." },
+        { name: "Neptune", dist: 2900, size: 22, colors: ["#6081ff", "#3a4da3", "#82aaff"], speed: 0.0014, note: "Neptune is the farthest planet..." },
+        { name: "Pluto", dist: 3300, size: 6, colors: ["#968172", "#6e5c52", "#c4b4a9"], speed: 0.001, note: "Pluto is a dwarf planet..." }
     ];
 
     const planetMeshes = [];
@@ -198,8 +225,14 @@
 
     window.adjustZoom = (amount) => {
         const direction = camera.position.clone().normalize();
-        camera.position.add(direction.multiplyScalar(amount));
+        const newPos = camera.position.clone().add(direction.clone().multiplyScalar(amount));
+        const dist = newPos.length();
+        // Check if new zoom position is within finite limits
+        if(dist > controls.minDistance && dist < controls.maxDistance) {
+            camera.position.copy(newPos);
+        }
     };
+
     window.openMenu = () => document.getElementById('planet-list-container').classList.add('active');
     window.closeMenu = () => document.getElementById('planet-list-container').classList.remove('active');
     window.resetView = () => { focusedPlanet = null; document.getElementById('info-box').style.display='none'; controls.target.set(0,0,0); closeMenu(); };
@@ -212,7 +245,6 @@
         orbit.rotateX(Math.PI/2);
         scene.add(orbit);
 
-        // Brighter Materials
         const mat = p.isEarth 
             ? new THREE.MeshStandardMaterial({ 
                 map: textureLoader.load('https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg'),
@@ -221,7 +253,7 @@
             : new THREE.MeshStandardMaterial({ 
                 map: createTopoTexture(p.colors), 
                 roughness: 0.4, metalness: 0.1,
-                emissive: new THREE.Color(p.colors[0]).multiplyScalar(0.2) // Subtle self-glow
+                emissive: new THREE.Color(p.colors[0]).multiplyScalar(0.2)
               });
 
         const mesh = new THREE.Mesh(new THREE.SphereGeometry(p.size, 64, 64), mat);
@@ -274,6 +306,7 @@
         sunGlow.material.uniforms.viewVector.value = new THREE.Vector3().subVectors(camera.position, sun.position);
         
         controls.update();
+        sunAura.material.uniforms.time.value += 0.02;
         renderer.render(scene, camera);
     }
     
