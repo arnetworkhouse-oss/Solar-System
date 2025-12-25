@@ -207,16 +207,16 @@
         return new THREE.CanvasTexture(canvas);
     }
 
-    const planetData = [
-        { name: "Mercury", dist: 350, size: 7, colors: ["#777", "#444", "#999"], speed: 0.035, note: "Mercury is the closest planet to the Sun..." },
-        { name: "Venus", dist: 500, size: 13, colors: ["#e3bb76", "#c29a5b", "#96723e"], speed: 0.015, note: "Venus is the second planet from the Sun..." },
-        { name: "Earth", dist: 700, size: 14, isEarth: true, speed: 0.01, note: "Earth is the third planet from the Sun..." },
-        { name: "Mars", dist: 900, size: 10, colors: ["#cc4422", "#993311", "#ff6644"], speed: 0.008, note: "Mars is known as the “Red Planet”..." },
-        { name: "Jupiter", dist: 1300, size: 42, colors: ["#d39c7e", "#b5846a", "#f3d1b5"], speed: 0.0045, note: "Jupiter is the largest planet..." },
-        { name: "Saturn", dist: 1850, size: 35, colors: ["#c5ab6e", "#a38b54", "#ebd197"], speed: 0.003, hasRing: true, note: "Saturn is the second-largest planet..." },
-        { name: "Uranus", dist: 2400, size: 22, colors: ["#bbe1e4", "#8dafb1", "#d9f5f7"], speed: 0.0018, note: "Uranus is an ice giant..." },
-        { name: "Neptune", dist: 2900, size: 22, colors: ["#6081ff", "#3a4da3", "#82aaff"], speed: 0.0014, note: "Neptune is the farthest planet..." },
-        { name: "Pluto", dist: 3300, size: 6, colors: ["#968172", "#6e5c52", "#c4b4a9"], speed: 0.001, note: "Pluto is a dwarf planet..." }
+        const planetData = [
+        { name: "Mercury", dist: 350, size: 7, colors: ["#777", "#444", "#999"], speed: 0.035, note: "Mercury is the closest planet to the Sun and the smallest planet in the Solar System. It has almost no atmosphere, which causes extreme temperature variations ranging from about 430°C during the day to −180°C at night. Mercury completes one revolution around the Sun in 88 Earth days and rotates slowly, taking 59 Earth days to complete one rotation. Its surface is heavily cratered due to meteor impacts." },
+        { name: "Venus", dist: 500, size: 13, colors: ["#e3bb76", "#c29a5b", "#96723e"], speed: 0.015, note: "Venus is the second planet from the Sun and is similar in size and structure to Earth. However, its dense atmosphere, composed mainly of carbon dioxide, creates an intense greenhouse effect, making Venus the hottest planet with an average surface temperature of about 465°C. Venus rotates in the opposite direction of most planets and has a very slow rotation period." },
+        { name: "Earth", dist: 700, size: 14, isEarth: true, speed: 0.01, note: "Earth is the third planet from the Sun and the only known planet that supports life. It has a suitable atmosphere containing oxygen and nitrogen, liquid water on its surface, and a moderate climate. Earth completes one revolution around the Sun in 365.25 days and has one natural satellite, the Moon, which influences tides and stabilizes Earth’s axial tilt." },
+        { name: "Mars", dist: 900, size: 10, colors: ["#cc4422", "#993311", "#ff6644"], speed: 0.008, note: "Mars is known as the “Red Planet” due to the presence of iron oxide on its surface. It has a thin atmosphere primarily made of carbon dioxide and experiences cold temperatures. Scientific evidence suggests that liquid water once existed on Mars. The planet contains the largest volcano in the Solar System, Olympus Mons." },
+        { name: "Jupiter", dist: 1300, size: 42, colors: ["#d39c7e", "#b5846a", "#f3d1b5"], speed: 0.0045, note: "Jupiter is the largest planet in the Solar System and is classified as a gas giant. It is composed mainly of hydrogen and helium and has a strong magnetic field. Jupiter has a massive storm known as the Great Red Spot, which has been active for centuries. It has many moons, including Ganymede, the largest moon in the Solar System." },
+        { name: "Saturn", dist: 1850, size: 35, colors: ["#c5ab6e", "#a38b54", "#ebd197"], speed: 0.003, hasRing: true, note: "Saturn is the second-largest planet and is famous for its prominent ring system made of ice and rock particles. Like Jupiter, Saturn is a gas giant composed mainly of hydrogen and helium. It has numerous moons, including Titan, which has a thick atmosphere and organic compounds." },
+        { name: "Uranus", dist: 2400, size: 22, colors: ["#bbe1e4", "#8dafb1", "#d9f5f7"], speed: 0.0018, note: "Uranus is an ice giant and has a blue-green color due to methane in its atmosphere. It rotates on its side with an axial tilt of about 98 degrees, resulting in extreme seasonal changes. Uranus has a cold atmosphere and a faint ring system." },
+        { name: "Neptune", dist: 2900, size: 22, colors: ["#6081ff", "#3a4da3", "#82aaff"], speed: 0.0014, note: "Neptune is the farthest planet from the Sun and is also an ice giant. It is known for having the strongest winds in the Solar System, reaching speeds of over 2,000 km/h. Neptune appears deep blue due to methane in its atmosphere and has a cold, dynamic climate." },
+        { name: "Pluto", dist: 3300, size: 6, colors: ["#968172", "#6e5c52", "#c4b4a9"], speed: 0.001, note: "Pluto is a dwarf planet located beyond Neptune in the Kuiper Belt. It was discovered in 1930 and was formerly considered the ninth planet of the Solar System. In 2006, it was reclassified as a dwarf planet because it has not cleared its orbital path. Pluto is composed mainly of ice and rock and has a thin atmosphere of nitrogen and methane. It takes 248 Earth years to orbit the Sun and has five moons, the largest being Charon." }
     ];
 
     const planetMeshes = [];
@@ -319,3 +319,4 @@
 </script>
 </body>
 </html>
+
